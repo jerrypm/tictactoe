@@ -7,20 +7,18 @@
 import SwiftUI
 
 struct CellView: View {
-    let cell: Cell
-    let action: () -> Void
-    
+    let symbol: String
+
     var body: some View {
         ZStack {
-            Rectangle()
-                .foregroundColor(.blue.opacity(0.3))
-            Text(cell.value ?? "")
-                .font(.largeTitle)
-                .bold()
+            RoundedRectangle(cornerRadius: 15)
+                .foregroundColor(.white)
+                .shadow(radius: 2)
+
+            Text(symbol)
+                .font(.system(size: 60, weight: .bold, design: .rounded))
+                .foregroundColor(symbol == "X" ? .blue : .red)
         }
-        .frame(width: 50, height: 50)
-        .onTapGesture {
-            action()
-        }
+        .aspectRatio(1, contentMode: .fit)
     }
 }

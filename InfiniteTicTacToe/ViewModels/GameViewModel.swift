@@ -8,87 +8,135 @@
 import SwiftUI
 
 class GameViewModel: ObservableObject {
-    @Published var cells: [Cell] = []
-    @Published var currentPlayer: String = "X"
-    @Published var gameStatus: String = "Player X's Turn"
+    @Published var board = Array(repeating: "", count: 9)
+    @Published var moveHistory: [(index: Int, symbol: String)] = []
+    @Published var isHumanTurn = true
+    @Published var statusMessage = "Your Turn (X)"
+    @Published var humanScore = 0
+    @Published var aiScore = 0
+    @Published var gameOver = false
     
-    let gridSize = 3
-    private var moveHistory: [(row: Int, column: Int)] = []
+    private let winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+        [0, 4, 8], [2, 4, 6] // Diagonals
+    ]
     
-    init() {
-        resetGame()
+    func countSymbols(_ symbol: String) -> Int {
+        return board.filter { $0 == symbol }.count
+    }
+    
+    func handleHumanMove(index: Int) {
+        if countSymbols("X") >= 3 {
+            if let oldestIndex = getOldestMoveIndex(symbol: "X") {
+                board[oldestIndex] = ""
+                moveHistory = moveHistory.filter { $0.index != oldestIndex }
+            }
+        }
+        makeMove(index: index, symbol: "X")
+    }
+    
+    private func getOldestMoveIndex(symbol: String) -> Int? {
+        return moveHistory.first(where: { $0.symbol == symbol })?.index
+    }
+    
+    func makeMove(index: Int, symbol: String) {
+        board[index] = symbol
+        moveHistory.append((index: index, symbol: symbol))
+        
+        if checkWinner(symbol: symbol) {
+            if symbol == "X" {
+                humanScore += 1
+                statusMessage = "You Win This Round!"
+                
+                if humanScore >= 3 {
+                    statusMessage = "You Win The Game!"
+                    gameOver = true
+                    return
+                }
+            } else {
+                aiScore += 1
+                statusMessage = "AI Wins This Round!"
+                
+                if aiScore >= 3 {
+                    statusMessage = "AI Wins The Game!"
+                    gameOver = true
+                    return
+                }
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                self.resetRound()
+            }
+        } else {
+            statusMessage = isHumanTurn ? "AI's Turn" : "Your Turn (X)"
+        }
+        
+        isHumanTurn.toggle()
+        if !isHumanTurn && !gameOver {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.aiMove()
+            }
+        }
+    }
+    
+    func aiMove() {
+        let availableMoves = board.indices.filter { board[$0] == "" }
+        guard !availableMoves.isEmpty else { return }
+        
+        if countSymbols("O") >= 3 {
+            if let oldestIndex = getOldestMoveIndex(symbol: "O") {
+                board[oldestIndex] = ""
+                moveHistory = moveHistory.filter { $0.index != oldestIndex }
+            }
+        }
+        
+        if let winningMove = findWinningMove(symbol: "O") {
+            makeMove(index: winningMove, symbol: "O")
+        } else if let blockingMove = findWinningMove(symbol: "X") {
+            makeMove(index: blockingMove, symbol: "O")
+        } else {
+            let randomMove = availableMoves.randomElement()!
+            makeMove(index: randomMove, symbol: "O")
+        }
+    }
+    
+    private func findWinningMove(symbol: String) -> Int? {
+        for combo in winningCombinations {
+            let symbols = combo.map { board[$0] }
+            let count = symbols.filter { $0 == symbol }.count
+            let empty = symbols.filter { $0 == "" }.count
+            
+            if count == 2 && empty == 1 {
+                return combo[symbols.firstIndex(of: "")!]
+            }
+        }
+        return nil
+    }
+    
+    private func checkWinner(symbol: String) -> Bool {
+        for combo in winningCombinations {
+            if combo.allSatisfy({ board[$0] == symbol }) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func resetRound() {
+        board = Array(repeating: "", count: 9)
+        moveHistory.removeAll()
+        isHumanTurn = true
+        statusMessage = "Your Turn (X)"
     }
     
     func resetGame() {
-        cells = (0..<gridSize * gridSize).map { index in
-            Cell(id: index,
-                 row: index / gridSize,
-                 column: index % gridSize,
-                 value: "")
-        }
-        currentPlayer = "X"
-        gameStatus = "Player X's Turn"
+        board = Array(repeating: "", count: 9)
         moveHistory.removeAll()
-    }
-    
-    func makeMove(row: Int, column: Int) {
-        guard let index = cells.firstIndex(where: { $0.row == row && $0.column == column }),
-              ((cells[index].value?.isEmpty) != nil),  // Remove optional chaining
-              !checkWinner() else { return }
-        
-        cells[index].value = currentPlayer
-        moveHistory.append((row: row, column: column))
-        
-        if checkWinner() {
-            gameStatus = "Player \(currentPlayer) Wins!"
-        } else if cells.allSatisfy({ (($0.value?.isEmpty) == nil) }) {  // Remove optional chaining
-            gameStatus = "It's a Draw!"
-        } else {
-            currentPlayer = currentPlayer == "X" ? "O" : "X"
-            gameStatus = "Player \(currentPlayer)'s Turn"
-        }
-    }
-    
-    func undoMove() {
-        guard let lastMove = moveHistory.popLast(),
-              let index = cells.firstIndex(where: { $0.row == lastMove.row && $0.column == lastMove.column }) else { return }
-        
-        cells[index].value = ""
-        currentPlayer = currentPlayer == "X" ? "O" : "X"
-        gameStatus = "Player \(currentPlayer)'s Turn"
-    }
-    
-    func checkWinner() -> Bool {
-        // Check rows
-        for row in 0..<gridSize {
-            if let first = cells.first(where: { $0.row == row && $0.column == 0 })?.value,
-               !first.isEmpty,
-               cells.filter({ $0.row == row }).allSatisfy({ $0.value == first }) {
-                return true
-            }
-        }
-        
-        // Check columns
-        for column in 0..<gridSize {
-            if let first = cells.first(where: { $0.row == 0 && $0.column == column })?.value,
-               !first.isEmpty,
-               cells.filter({ $0.column == column }).allSatisfy({ $0.value == first }) {
-                return true
-            }
-        }
-        
-        // Check diagonals
-        let diagonal1 = (0..<gridSize).map { i in cells.first(where: { $0.row == i && $0.column == i })?.value ?? "" }
-        let diagonal2 = (0..<gridSize).map { i in cells.first(where: { $0.row == i && $0.column == (gridSize - 1 - i) })?.value ?? "" }
-        
-        if let first = diagonal1.first, !first.isEmpty, diagonal1.allSatisfy({ $0 == first }) {
-            return true
-        }
-        
-        if let first = diagonal2.first, !first.isEmpty, diagonal2.allSatisfy({ $0 == first }) {
-            return true
-        }
-        
-        return false
+        isHumanTurn = true
+        statusMessage = "Your Turn (X)"
+        humanScore = 0
+        aiScore = 0
+        gameOver = false
     }
 }

@@ -11,69 +11,58 @@ struct InfiniteTicTacToeView: View {
     @StateObject private var viewModel = GameViewModel()
     
     var body: some View {
-        VStack {
-            // Header
-            Text("Tic Tac Toe")
-                .font(.largeTitle)
-                .bold()
-                .padding(.top)
-            
-            // Game Status
-            Text(viewModel.gameStatus)
-                .font(.headline)
-                .foregroundColor(viewModel.gameStatus.contains("Win") ? .green : .primary)
-                .padding()
+        VStack(spacing: 20) {
+            // Title and Scores
+            VStack {
+                Text("Infinity Tic Tac Toe")
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .foregroundColor(.primary)
+                
+                HStack {
+                    Text("You: \(viewModel.humanScore)/3")
+                        .foregroundColor(.blue)
+                    Spacer()
+                    Text("AI: \(viewModel.aiScore)/3")
+                        .foregroundColor(.red)
+                }
+                .font(.system(size: 20, weight: .medium, design: .rounded))
+            }
             
             // Game Board
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: viewModel.gridSize), spacing: 8) {
-                ForEach(viewModel.cells) { cell in
-                    CellView(cell: cell, action: {
-                        withAnimation {
-                            viewModel.makeMove(row: cell.row, column: cell.column)
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
+                ForEach(0 ..< 9) { index in
+                    CellView(symbol: viewModel.board[index])
+                        .onTapGesture {
+                            if viewModel.board[index] == "" && viewModel.isHumanTurn && !viewModel.gameOver {
+                                viewModel.handleHumanMove(index: index)
+                            }
                         }
-                    })
                 }
             }
             .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 2)
-            )
-            .padding()
+            .background(Color(.systemGray6))
+            .cornerRadius(20)
+            .shadow(radius: 5)
             
-            // Control Buttons
-            HStack(spacing: 20) {
-                Button(action: {
-                    withAnimation {
-                        viewModel.resetGame()
-                    }
-                }) {
-                    Text("New Game")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(minWidth: 120)
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                
-                Button(action: {
-                    withAnimation {
-                        viewModel.undoMove()
-                    }
-                }) {
-                    Text("Undo")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(minWidth: 120)
-                        .background(Color.orange)
-                        .cornerRadius(10)
-                }
+            // Status Message
+            Text(viewModel.statusMessage)
+                .font(.system(size: 24, weight: .medium, design: .rounded))
+                .foregroundColor(.accentColor)
+            
+            // Reset Button
+            Button(action: viewModel.resetGame) {
+                Text(viewModel.gameOver ? "New Game" : "Reset Round")
+                    .font(.system(size: 20, weight: .semibold, design: .rounded))
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .cornerRadius(15)
             }
-            .padding(.bottom)
+            .padding(.horizontal)
         }
-        .background(Color.gray.opacity(0.1))
+        .padding()
+        .background(Color(.systemBackground))
     }
 }
 

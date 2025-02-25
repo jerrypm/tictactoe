@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Cell: Identifiable {
+struct CellModel: Identifiable {
     let id: Int
     var row: Int
     var column: Int
