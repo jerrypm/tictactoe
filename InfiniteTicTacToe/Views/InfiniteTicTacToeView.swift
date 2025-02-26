@@ -2,8 +2,9 @@
 //  InfiniteTicTacToeView.swift
 //  InfiniteTicTacToe
 //
-//  Created by Jeri Purnama Maulid on 05/12/24.
+//  Created by JPM on 05/12/24.
 //
+//  this is Infinite TicTacToe Board
 
 import SwiftUI
 

@@ -2,16 +2,16 @@
 //  GameViewModel.swift
 //  InfiniteTicTacToe
 //
-//  Created by Jeri Purnama Maulid on 05/12/24.
+//  Created by JPM on 05/12/24.
 //
 
 import SwiftUI
 
 class GameViewModel: ObservableObject {
-    @Published var board = Array(repeating: "", count: 9)
+    @Published var board = Array(repeating: SC.empty.value, count: 9)
     @Published var moveHistory: [(index: Int, symbol: String)] = []
     @Published var isHumanTurn = true
-    @Published var statusMessage = "Your Turn (X)"
+    @Published var statusMessage = SC.strYourTurn
     @Published var humanScore = 0
     @Published var aiScore = 0
     @Published var gameOver = false
@@ -29,7 +29,7 @@ class GameViewModel: ObservableObject {
     func handleHumanMove(index: Int) {
         if countSymbols("X") >= 3 {
             if let oldestIndex = getOldestMoveIndex(symbol: "X") {
-                board[oldestIndex] = ""
+                board[oldestIndex] = .empty
                 moveHistory = moveHistory.filter { $0.index != oldestIndex }
             }
         }
@@ -47,19 +47,19 @@ class GameViewModel: ObservableObject {
         if checkWinner(symbol: symbol) {
             if symbol == "X" {
                 humanScore += 1
-                statusMessage = "You Win This Round!"
+                statusMessage = SC.strYouWinRound
                 
                 if humanScore >= 3 {
-                    statusMessage = "You Win The Game!"
+                    statusMessage = SC.strYouWinGame
                     gameOver = true
                     return
                 }
             } else {
                 aiScore += 1
-                statusMessage = "AI Wins This Round!"
+                statusMessage = SC.strAIWinRound
                 
                 if aiScore >= 3 {
-                    statusMessage = "AI Wins The Game!"
+                    statusMessage = SC.strAIWinGame
                     gameOver = true
                     return
                 }
@@ -69,7 +69,7 @@ class GameViewModel: ObservableObject {
                 self.resetRound()
             }
         } else {
-            statusMessage = isHumanTurn ? "AI's Turn" : "Your Turn (X)"
+            statusMessage = isHumanTurn ? SC.strAITurn : SC.strYourTurn
         }
         
         isHumanTurn.toggle()
@@ -105,10 +105,10 @@ class GameViewModel: ObservableObject {
         for combo in winningCombinations {
             let symbols = combo.map { board[$0] }
             let count = symbols.filter { $0 == symbol }.count
-            let empty = symbols.filter { $0 == "" }.count
+            let empty = symbols.filter { $0 == .empty }.count
             
             if count == 2 && empty == 1 {
-                return combo[symbols.firstIndex(of: "")!]
+                return combo[symbols.firstIndex(of: .empty)!]
             }
         }
         return nil
@@ -124,17 +124,17 @@ class GameViewModel: ObservableObject {
     }
     
     func resetRound() {
-        board = Array(repeating: "", count: 9)
+        board = Array(repeating: .empty, count: 9)
         moveHistory.removeAll()
         isHumanTurn = true
-        statusMessage = "Your Turn (X)"
+        statusMessage = SC.strYourTurn
     }
     
     func resetGame() {
-        board = Array(repeating: "", count: 9)
+        board = Array(repeating: .empty, count: 9)
         moveHistory.removeAll()
         isHumanTurn = true
-        statusMessage = "Your Turn (X)"
+        statusMessage = SC.strYourTurn
         humanScore = 0
         aiScore = 0
         gameOver = false

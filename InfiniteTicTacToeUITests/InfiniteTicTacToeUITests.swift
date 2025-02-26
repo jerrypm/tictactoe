@@ -2,7 +2,7 @@
 //  InfiniteTicTacToeUITests.swift
 //  InfiniteTicTacToeUITests
 //
-//  Created by Jeri Purnama Maulid on 05/12/24.
+//  Created by JPM on 05/12/24.
 //
 
 import XCTest
