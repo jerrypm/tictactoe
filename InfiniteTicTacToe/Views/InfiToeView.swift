@@ -8,14 +8,14 @@
 
 import SwiftUI
 
-struct InfiniteTicTacToeView: View {
+struct InfiToeView: View {
     @StateObject private var viewModel = GameViewModel()
     
     var body: some View {
         VStack(spacing: 20) {
             // Title and Scores
             VStack {
-                Text("Infinity Tic Tac Toe")
+                Text("Toe")
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .foregroundColor(.primary)
                 
