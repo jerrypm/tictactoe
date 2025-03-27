@@ -11,7 +11,7 @@ import SwiftUI
 struct InfiniteTicTacToeApp: App {
     var body: some Scene {
         WindowGroup {
-            InfiniteTicTacToeView()
+            InfiToeView()
         }
     }
 }
