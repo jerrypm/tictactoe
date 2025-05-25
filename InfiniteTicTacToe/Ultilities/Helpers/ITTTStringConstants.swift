@@ -7,9 +7,9 @@
 
 import Foundation
 
-typealias SC = StringConstant
+typealias SC = ITTTStringConstant
 
-enum StringConstant: String {
+enum ITTTStringConstant: String {
     // MARK: - Empty & Tab
 
     case empty = ""
@@ -19,6 +19,8 @@ enum StringConstant: String {
 
     case icSettings = "ic_settings"
     case icBack = "ic_back"
+    case icChevronLeft = "chevron.left"
+    case icChevronRight = "chevron.right"
 
     case imageTitleXOX = "image-titleXOX"
     case imageVS = "image-vs"
@@ -31,7 +33,7 @@ enum StringConstant: String {
     }
 }
 
-extension StringConstant {
+extension ITTTStringConstant {
     static let strYouWinRound: String = "You Win This Round!"
     static let strAIWinRound: String = "AI Wins This Round!"
 
@@ -42,4 +44,10 @@ extension StringConstant {
     static let strAITurn: String = "AI Turn (O)"
 
     static let gameMode = "Game Mode"
+    static let lastScore = "Last Score"
+    static let newGame = "New Game"
+    static let resetRound = "Reset Round"
+    static let vs = "VS"
+    static let xText = "X"
+    static let oText = "O"
 }

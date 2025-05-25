@@ -1,5 +1,5 @@
 //
-//  GameCardView.swift
+//  ITTTGameModeCardView.swift
 //  InfiniteTicTacToe
 //
 //  Created by Jeri Purnama Maulid on 02/03/25.
@@ -7,25 +7,26 @@
 
 import SwiftUI
 
-struct GameModeCardView: View {
+struct ITTTGameModeCardView: View {
     let isMiddle: Bool
+    var onTap: (() -> Void)? = nil
     
     var body: some View {
         ZStack {
             Image(SC.imageGameMode.value)
                 .resizable()
                 .scaledToFill()
-                .frame(width: isMiddle ? 200 : 160, height: isMiddle ? 200 : 160)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .frame(width: isMiddle ? .twoHundred : .hundredSixty, height: isMiddle ? .twoHundred : .hundredSixty)
+                .clipShape(RoundedRectangle(cornerRadius: .twenty))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: .twenty)
                         .stroke(
                             LinearGradient(
                                 gradient: Gradient(colors: [Color(.colorPrimaryAi), Color(.colorPrimaryUser)]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
-                            lineWidth: isMiddle ? 4 : 2
+                            lineWidth: isMiddle ? .four : .two
                         )
                 )
             
@@ -34,31 +35,36 @@ struct GameModeCardView: View {
                     HStack {
                         // Player icon
                         Image(SC.imageUser.value)
-                            .frame(width: 24, height: 24)
+                            .frame(width: .twentyFour, height: .twentyFour)
                         
                         Spacer()
                             
                         // Computer icon
                         Image(SC.imageAI.value)
-                            .font(.system(size: 18))
+                            .font(.system(size: .eighteen))
                     }
-                    .padding(.horizontal, 30)
+                    .padding(.horizontal, .thirtyTwo)
                         
                     // VS text
-                    Text("VS")
-                        .font(.system(size: 48, weight: .bold))
+                    Text(SC.vs)
+                        .font(.system(size: .fortyEight, weight: .bold))
                         .foregroundColor(.white)
-                        .padding(.top, -16)
-                        .padding(.bottom, -20)
+                        .padding(.top, -.sixteen)
+                        .padding(.bottom, -.twenty)
                 }
             }
         }
-        .frame(width: isMiddle ? 200 : 160, height: isMiddle ? 200 : 160)
+        .frame(width: isMiddle ? .twoHundred : .hundredSixty, height: isMiddle ? .twoHundred : .hundredSixty)
+        .onTapGesture {
+            if isMiddle, let action = onTap {
+                action()
+            }
+        }
     }
 }
 
 #Preview {
-    GameModeCardView(isMiddle: true)
+    ITTTGameModeCardView(isMiddle: true)
         .background(Color.black)
 }
 

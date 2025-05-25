@@ -1,5 +1,5 @@
 //
-//  InfiToeView.swift
+//  ITTTBoardView.swift
 //  InfiniteTicTacToe
 //
 //  Created by JPM on 05/12/24.
@@ -8,14 +8,14 @@
 
 import SwiftUI
 
-struct InfiToeView: View {
-    @StateObject private var viewModel = GameViewModel()
+struct ITTTBoardView: View {
+    @StateObject private var viewModel = ITTTGameViewModel()
 
     var body: some View {
         ZStack {
-            LinearGradientView()
+            ITTTLinearGradientView()
 
-            VStack(spacing: 20) {
+            VStack(spacing: .twenty) {
                 titleAndScores
                 gameBoard
                 statusMessage
@@ -32,7 +32,7 @@ struct InfiToeView: View {
         // Title and Scores
         VStack {
             Text("Toe")
-                .font(.system(size: 36, weight: .bold, design: .rounded))
+                .font(.system(size: .thirtySix, weight: .bold, design: .rounded))
                 .foregroundColor(.primary)
 
             HStack {
@@ -42,18 +42,18 @@ struct InfiToeView: View {
                 Text("AI: \(viewModel.aiScore)/3")
                     .foregroundColor(.red)
             }
-            .font(.system(size: 20, weight: .medium, design: .rounded))
+            .font(.system(size: .twenty, weight: .medium, design: .rounded))
         }
     }
 
     // MARK: Game Board
 
     private var gameBoard: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: .ten), count: .three), spacing: .ten) {
             ForEach(0 ..< 9) { index in
-                CellView(symbol: viewModel.board[index])
+                ITTTCellView(symbol: viewModel.board[index])
                     .onTapGesture {
-                        if viewModel.board[index] == "" && viewModel.isHumanTurn && !viewModel.gameOver {
+                        if viewModel.board[index] == .empty && viewModel.isHumanTurn && !viewModel.gameOver {
                             viewModel.handleHumanMove(index: index)
                         }
                     }
@@ -61,15 +61,15 @@ struct InfiToeView: View {
         }
         .padding()
         .background(Color(.systemGray6))
-        .cornerRadius(20)
-        .shadow(radius: 5)
+        .cornerRadius(.twenty)
+        .shadow(radius: .five)
     }
 
     // MARK: Status Message
 
     private var statusMessage: some View {
         Text(viewModel.statusMessage)
-            .font(.system(size: 24, weight: .medium, design: .rounded))
+            .font(.system(size: .twentyFour, weight: .medium, design: .rounded))
             .foregroundColor(.accentColor)
     }
 
@@ -77,18 +77,18 @@ struct InfiToeView: View {
 
     private var resetButton: some View {
         Button(action: viewModel.resetGame) {
-            Text(viewModel.gameOver ? "New Game" : "Reset Round")
-                .font(.system(size: 20, weight: .semibold, design: .rounded))
+            Text(viewModel.gameOver ? SC.newGame : SC.resetRound)
+                .font(.system(size: .twenty, weight: .semibold, design: .rounded))
                 .foregroundColor(.white)
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(Color.blue)
-                .cornerRadius(15)
+                .cornerRadius(.fourteen)
         }
         .padding(.horizontal)
     }
 }
 
 #Preview {
-    InfiToeView()
+    ITTTBoardView()
 }

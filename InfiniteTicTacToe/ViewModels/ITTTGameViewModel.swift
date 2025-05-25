@@ -1,5 +1,5 @@
 //
-//  GameViewModel.swift
+//  ITTTGameViewModel.swift
 //  InfiniteTicTacToe
 //
 //  Created by JPM on 05/12/24.
@@ -7,33 +7,29 @@
 
 import SwiftUI
 
-class GameViewModel: ObservableObject {
-    @Published var board = Array(repeating: SC.empty.value, count: 9)
+class ITTTGameViewModel: ObservableObject {
+    @Published var board = Array(repeating: SC.empty.value, count: .nine)
     @Published var moveHistory: [(index: Int, symbol: String)] = []
-    @Published var isHumanTurn = true
+    @Published var isHumanTurn: Bool = true
     @Published var statusMessage = SC.strYourTurn
-    @Published var humanScore = 0
-    @Published var aiScore = 0
-    @Published var gameOver = false
+    @Published var humanScore: Int = .zero
+    @Published var aiScore: Int = .zero
+    @Published var gameOver: Bool = false
     
-    private let winningCombinations = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-        [0, 4, 8], [2, 4, 6] // Diagonals
-    ]
+    private let winningCombinations = ITTTMockData.winningCombinations
     
     func countSymbols(_ symbol: String) -> Int {
         return board.filter { $0 == symbol }.count
     }
     
     func handleHumanMove(index: Int) {
-        if countSymbols("X") >= 3 {
-            if let oldestIndex = getOldestMoveIndex(symbol: "X") {
+        if countSymbols(.xText) >= .three {
+            if let oldestIndex = getOldestMoveIndex(symbol: .xText) {
                 board[oldestIndex] = .empty
                 moveHistory = moveHistory.filter { $0.index != oldestIndex }
             }
         }
-        makeMove(index: index, symbol: "X")
+        makeMove(index: index, symbol: .xText)
     }
     
     private func getOldestMoveIndex(symbol: String) -> Int? {
@@ -45,27 +41,27 @@ class GameViewModel: ObservableObject {
         moveHistory.append((index: index, symbol: symbol))
         
         if checkWinner(symbol: symbol) {
-            if symbol == "X" {
-                humanScore += 1
+            if symbol == .xText {
+                humanScore += .one
                 statusMessage = SC.strYouWinRound
                 
-                if humanScore >= 3 {
+                if humanScore >= .three {
                     statusMessage = SC.strYouWinGame
                     gameOver = true
                     return
                 }
             } else {
-                aiScore += 1
+                aiScore += .one
                 statusMessage = SC.strAIWinRound
                 
-                if aiScore >= 3 {
+                if aiScore >= .three {
                     statusMessage = SC.strAIWinGame
                     gameOver = true
                     return
                 }
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .onePointFive) {
                 self.resetRound()
             }
         } else {
@@ -74,30 +70,30 @@ class GameViewModel: ObservableObject {
         
         isHumanTurn.toggle()
         if !isHumanTurn && !gameOver {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .pointFive) {
                 self.aiMove()
             }
         }
     }
     
     func aiMove() {
-        let availableMoves = board.indices.filter { board[$0] == "" }
+        let availableMoves = board.indices.filter { board[$0] == .empty }
         guard !availableMoves.isEmpty else { return }
         
-        if countSymbols("O") >= 3 {
-            if let oldestIndex = getOldestMoveIndex(symbol: "O") {
-                board[oldestIndex] = ""
+        if countSymbols(.oText) >= .three {
+            if let oldestIndex = getOldestMoveIndex(symbol: .oText) {
+                board[oldestIndex] = .empty
                 moveHistory = moveHistory.filter { $0.index != oldestIndex }
             }
         }
         
-        if let winningMove = findWinningMove(symbol: "O") {
-            makeMove(index: winningMove, symbol: "O")
-        } else if let blockingMove = findWinningMove(symbol: "X") {
-            makeMove(index: blockingMove, symbol: "O")
+        if let winningMove = findWinningMove(symbol: .oText) {
+            makeMove(index: winningMove, symbol: .oText)
+        } else if let blockingMove = findWinningMove(symbol: .xText) {
+            makeMove(index: blockingMove, symbol: .oText)
         } else {
             let randomMove = availableMoves.randomElement()!
-            makeMove(index: randomMove, symbol: "O")
+            makeMove(index: randomMove, symbol: .oText)
         }
     }
     
@@ -107,7 +103,7 @@ class GameViewModel: ObservableObject {
             let count = symbols.filter { $0 == symbol }.count
             let empty = symbols.filter { $0 == .empty }.count
             
-            if count == 2 && empty == 1 {
+            if count == .two && empty == .one {
                 return combo[symbols.firstIndex(of: .empty)!]
             }
         }
@@ -124,19 +120,19 @@ class GameViewModel: ObservableObject {
     }
     
     func resetRound() {
-        board = Array(repeating: .empty, count: 9)
+        board = Array(repeating: .empty, count: .nine)
         moveHistory.removeAll()
         isHumanTurn = true
         statusMessage = SC.strYourTurn
     }
     
     func resetGame() {
-        board = Array(repeating: .empty, count: 9)
+        board = Array(repeating: .empty, count: .nine)
         moveHistory.removeAll()
         isHumanTurn = true
         statusMessage = SC.strYourTurn
-        humanScore = 0
-        aiScore = 0
+        humanScore = .zero
+        aiScore = .zero
         gameOver = false
     }
 }

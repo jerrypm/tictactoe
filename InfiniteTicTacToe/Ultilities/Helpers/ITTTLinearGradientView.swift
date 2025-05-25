@@ -1,5 +1,5 @@
 //
-//  LinearGradientView.swift
+//  ITTTLinearGradientView.swift
 //  InfiniteTicTacToe
 //
 //  Created by Jeri Purnama Maulid on 01/03/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LinearGradientView: View {
+struct ITTTLinearGradientView: View {
     var body: some View {
         LinearGradient(
             gradient: Gradient(colors: [
