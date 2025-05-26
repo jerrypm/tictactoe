@@ -18,6 +18,14 @@ enum ITTTImage {
         return Image(SC.icSettings.value)
     }
 
+    static var leftArrow: Image {
+        return Image(SC.icLeftArrow.value)
+    }
+
+    static var rightArrow: Image {
+        return Image(SC.icRightArrow.value)
+    }
+
     // MARK: System
 
     static var arrowLeft: Image {

@@ -21,5 +21,6 @@ public struct ITTTHeaderView: View {
                 .frame(height: .twentyFour)
         }
         .padding(.horizontal)
+        .padding(.top, .fifty)
     }
 }

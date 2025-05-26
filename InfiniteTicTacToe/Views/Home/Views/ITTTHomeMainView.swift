@@ -23,17 +23,12 @@ struct ITTTHomeMainView: View {
             ZStack {
                 ITTTLinearGradientView()
 
-                VStack(spacing: .twenty) {
-                    Spacer()
-                        .frame(height: .fifty)
-
+                VStack(spacing: .twentyFour) {
                     ITTTHeaderView()
-                    Spacer()
                     gameModeSection
-                    Spacer()
                     ITTTLastScoreView()
-                    Spacer()
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
             .ignoresSafeArea()
             .navigationDestination(isPresented: $navigateToGame) {

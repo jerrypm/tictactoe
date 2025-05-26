@@ -23,13 +23,19 @@ public struct ITTTLastScoreView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading)
 
-            VStack(spacing: .zero) {
-                ForEach(viewModel.gameHistory) { game in
-                    ITTTGameHistoryRow(game: game)
+            ScrollView {
+                VStack(spacing: .zero) {
+                    ForEach(viewModel.gameHistory) { game in
+                        ITTTGameHistoryRow(game: game)
+                    }
                 }
+                .background(Color.black.opacity(.pointThreeFive))
+                .cornerRadius(.twelve)
             }
-            .background(Color.black.opacity(.pointThreeFive))
-            .cornerRadius(.twelve)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: .twenty)
+            }
+            .scrollIndicators(.hidden)
             .padding(.horizontal)
         }
     }

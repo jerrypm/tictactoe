@@ -21,6 +21,8 @@ enum ITTTStringConstant: String {
     case icBack = "ic_back"
     case icChevronLeft = "chevron.left"
     case icChevronRight = "chevron.right"
+    case icLeftArrow = "ic_left_arrow"
+    case icRightArrow = "ic_right_arrow"
 
     case imageTitleXOX = "image-titleXOX"
     case imageVS = "image-vs"
