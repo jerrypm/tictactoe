@@ -13,6 +13,7 @@ extension Double {
     static let pointThree: Double = 0.3
     static let pointFour: Double = 0.4
     static let pointFive: Double = 0.5
+    static let pointSix: Double = 0.6
     static let pointSeven: Double = 0.7
     static let pointEight: Double = 0.8
     static let pointNine: Double = 0.9

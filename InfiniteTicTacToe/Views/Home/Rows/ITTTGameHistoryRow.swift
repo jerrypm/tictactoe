@@ -28,7 +28,7 @@ struct ITTTGameHistoryRow: View {
             
             Text(game.result.rawValue)
                 .font(.system(size: .fourteen, weight: .medium))
-                .foregroundColor(.white)
+                .foregroundColor(game.result == .win ? .black : .white)
                 .padding(.horizontal, .twelve)
                 .padding(.vertical, .four)
                 .background(

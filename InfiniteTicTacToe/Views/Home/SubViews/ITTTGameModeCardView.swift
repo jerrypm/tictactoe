@@ -10,7 +10,7 @@ import SwiftUI
 struct ITTTGameModeCardView: View {
     let isMiddle: Bool
     var onTap: (() -> Void)? = nil
-    
+
     var body: some View {
         ZStack {
             Image(SC.imageGameMode.value)
@@ -29,28 +29,33 @@ struct ITTTGameModeCardView: View {
                             lineWidth: isMiddle ? .four : .two
                         )
                 )
-            
+
             if isMiddle {
-                VStack {
+                VStack(spacing: .sixteen) {
                     HStack {
                         // Player icon
                         Image(SC.imageUser.value)
                             .frame(width: .twentyFour, height: .twentyFour)
-                        
+
                         Spacer()
-                            
-                        // Computer icon
-                        Image(SC.imageAI.value)
-                            .font(.system(size: .eighteen))
                     }
                     .padding(.horizontal, .thirtyTwo)
-                        
+
                     // VS text
                     Text(SC.vs)
                         .font(.system(size: .fortyEight, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.top, -.sixteen)
                         .padding(.bottom, -.twenty)
+
+                    HStack {
+                        Spacer()
+
+                        // Computer icon
+                        Image(SC.imageAI.value)
+                            .font(.system(size: .eighteen))
+                    }
+                    .padding(.horizontal, .thirtyTwo)
                 }
             }
         }
@@ -67,5 +72,3 @@ struct ITTTGameModeCardView: View {
     ITTTGameModeCardView(isMiddle: true)
         .background(Color.black)
 }
-
-

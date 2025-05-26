@@ -9,6 +9,7 @@ You are an expert iOS developer using Swift and SwiftUI. Follow these guidelines
 - Use MVVM architecture with SwiftUI
 - Structure: Features/, Core/, UI/, Resources/
 - Follow Apple's Human Interface Guidelines
+- Make the code cleaner; if there are too many lines in the body, break it into several separate struct Views.
 
 # Naming
 
