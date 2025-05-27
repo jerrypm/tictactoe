@@ -31,9 +31,13 @@ struct ITTTGameModeView: View {
 
     var body: some View {
         VStack {
-            gameModeCarousel
-            carouselNavigationButtons
+            ZStack {
+                gameModeCarousel
+                carouselNavigationButtons
+                    .padding(.horizontal, .ten)
+            }
             pageIndicators
+                .padding(.top, .twelve)
         }
     }
 
@@ -67,22 +71,20 @@ struct ITTTGameModeView: View {
     private var carouselNavigationButtons: some View {
         HStack {
             Button(action: handlePreviousPage) {
-                ITTTImage.arrowLeft
-                    .circleButtonStyle()
+                ITTTImage.leftArrow
             }
             .disabled(isAnimating)
-            .padding(.leading, .ten)
+            .opacity(currentPageIndex == .zero ? .zero : 1)
 
             Spacer()
+                .frame(width: cardSpacing)
 
             Button(action: handleNextPage) {
-                ITTTImage.arrowRight
-                    .circleButtonStyle()
+                ITTTImage.rightArrow
             }
             .disabled(isAnimating)
-            .padding(.trailing, .ten)
+            .opacity(currentPageIndex == numberOfGameModes - .one ? .zero : 1)
         }
-        .frame(width: .twoHundred)
         .padding(.top, .twelve)
     }
 
