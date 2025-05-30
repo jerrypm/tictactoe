@@ -15,4 +15,12 @@ public extension String {
     static var dash: String {
         return SC.dash.value
     }
+
+    static var xText: String {
+        return SC.xText
+    }
+
+    static var oText: String {
+        return SC.oText
+    }
 }
