@@ -23,6 +23,7 @@ class ITTTGameViewModel: ObservableObject {
     }
     
     func handleHumanMove(index: Int) {
+        // Handle human piece limit before making the move
         if countSymbols(.xText) >= .three {
             if let oldestIndex = getOldestMoveIndex(symbol: .xText) {
                 board[oldestIndex] = .empty
@@ -40,6 +41,7 @@ class ITTTGameViewModel: ObservableObject {
         board[index] = symbol
         moveHistory.append((index: index, symbol: symbol))
         
+        // Check for winner immediately after the move
         if checkWinner(symbol: symbol) {
             if symbol == .xText {
                 humanScore += .one
@@ -61,14 +63,18 @@ class ITTTGameViewModel: ObservableObject {
                 }
             }
             
+            // Reset after a delay - turn will continue naturally
             DispatchQueue.main.asyncAfter(deadline: .now() + .onePointFive) {
                 self.resetRound()
             }
-        } else {
-            statusMessage = isHumanTurn ? SC.strAITurn : SC.strYourTurn
+            return
         }
         
-        isHumanTurn.toggle()
+        // Only toggle turn and continue if no winner
+        isHumanTurn = symbol == .oText // Set turn based on who just moved
+        statusMessage = isHumanTurn ? SC.strYourTurn : SC.strAITurn
+        
+        // Trigger AI move if it's AI's turn
         if !isHumanTurn && !gameOver {
             DispatchQueue.main.asyncAfter(deadline: .now() + .pointFive) {
                 self.aiMove()
@@ -80,6 +86,7 @@ class ITTTGameViewModel: ObservableObject {
         let availableMoves = board.indices.filter { board[$0] == .empty }
         guard !availableMoves.isEmpty else { return }
         
+        // Handle AI piece limit before making the move
         if countSymbols(.oText) >= .three {
             if let oldestIndex = getOldestMoveIndex(symbol: .oText) {
                 board[oldestIndex] = .empty
@@ -87,6 +94,7 @@ class ITTTGameViewModel: ObservableObject {
             }
         }
         
+        // Find the best move
         if let winningMove = findWinningMove(symbol: .oText) {
             makeMove(index: winningMove, symbol: .oText)
         } else if let blockingMove = findWinningMove(symbol: .xText) {
@@ -122,10 +130,19 @@ class ITTTGameViewModel: ObservableObject {
     func resetRound() {
         board = Array(repeating: .empty, count: .nine)
         moveHistory.removeAll()
-        isHumanTurn = true
-        statusMessage = SC.strYourTurn
+        
+        // Keep the same turn sequence as before the reset
+        statusMessage = isHumanTurn ? SC.strYourTurn : SC.strAITurn
+        
+        // If it's AI's turn, trigger AI move immediately
+        if !isHumanTurn && !gameOver {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .pointFive) {
+                self.aiMove()
+            }
+        }
     }
     
+    // pedding, continue after UI update
     func resetGame() {
         board = Array(repeating: .empty, count: .nine)
         moveHistory.removeAll()

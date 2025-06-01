@@ -29,6 +29,8 @@ enum ITTTStringConstant: String {
     case imageAI = "image-ai"
     case imageUser = "image-user"
     case imageGameMode = "image-game-mode"
+    case imageEllipse = "image_ellipse"
+    case imageCross = "image_cross"
 
     var value: String {
         return rawValue

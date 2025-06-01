@@ -22,11 +22,12 @@ struct ITTTParentBoardView: View {
             VStack(spacing: .twenty) {
                 ITTTHeaderBoardView()
                 ITTTGameBoardView()
-                statusMessage
-                resetButton
+//                statusMessage
+//                resetButton
             }
             .padding()
             .background(Color(.clear))
+            .itttBackButton()
         }
     }
 

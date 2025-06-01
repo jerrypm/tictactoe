@@ -9,6 +9,10 @@ import SwiftUI
 
 enum ITTTImage {
     // MARK: Assets
+    
+    static var back: Image {
+        return Image(SC.icBack.value)
+    }
 
     static var titleXOX: Image {
         return Image(SC.imageTitleXOX.value)
@@ -25,6 +29,23 @@ enum ITTTImage {
     static var rightArrow: Image {
         return Image(SC.icRightArrow.value)
     }
+    
+    static var humanImage: Image {
+        return Image(SC.imageUser.value)
+    }
+    
+    static var aiImage: Image {
+        return Image(SC.imageAI.value)
+    }
+    
+    static var cross: Image {
+        return Image(SC.imageCross.value)
+    }
+    
+    static var ellipse: Image {
+        return Image(SC.imageEllipse.value)
+    }
+    
 
     // MARK: System
 

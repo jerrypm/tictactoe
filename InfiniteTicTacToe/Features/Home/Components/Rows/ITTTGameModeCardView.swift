@@ -34,7 +34,7 @@ struct ITTTGameModeCardView: View {
                 VStack(spacing: .sixteen) {
                     HStack {
                         // Player icon
-                        Image(SC.imageUser.value)
+                        ITTTImage.humanImage
                             .frame(width: .twentyFour, height: .twentyFour)
 
                         Spacer()
@@ -52,7 +52,7 @@ struct ITTTGameModeCardView: View {
                         Spacer()
 
                         // Computer icon
-                        Image(SC.imageAI.value)
+                        ITTTImage.aiImage
                             .font(.system(size: .eighteen))
                     }
                     .padding(.horizontal, .thirtyTwo)
